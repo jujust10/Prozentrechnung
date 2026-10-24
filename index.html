@@ -4,29 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17324d">
-  <meta name="description" content="Interaktives Prozentrechnen-Quiz und Prozent-Penalty für BwR 7b.">
+  <meta name="description" content="Zwei Prozent-Lernspiele und eine einfache Würfelfunktion für BwR 7b.">
   <title>Prozent-Training · BwR 7b</title>
   <style>
-    :root{--navy:#17324d;--red:#ba3733;--green:#3b7654;--gold:#e1b353;--ink:#1e2a32;--muted:#52616b;--paper:#f4f7f5;--line:#d7e0e5;--white:#fff;--good:#17613b;--bad:#982c28;--shadow:0 12px 34px rgba(23,50,77,.12)}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.5}
-    header{background:var(--navy);color:var(--white);padding:22px max(20px,calc((100vw - 1050px)/2)) 25px;border-bottom:7px solid var(--red)}
-    .eyebrow{margin:0 0 5px;color:#d6e3ec;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase}h1{font-size:clamp(1.8rem,4vw,2.65rem);line-height:1.12;margin:0}header p:last-child{margin:10px 0 0;color:#e1eaf0}
-    main{width:min(1050px,calc(100% - 28px));margin:22px auto 60px}.card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3.5vw,30px);box-shadow:var(--shadow);margin-bottom:22px}
-    h2{color:var(--navy);font-size:clamp(1.35rem,3vw,1.8rem);margin:0 0 5px}h3{color:var(--navy);margin:0 0 6px}.lead{color:var(--muted);margin:0 0 18px}
-    .step{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-weight:700;font-size:.95rem;margin-bottom:8px}.step:before{content:"";width:10px;height:10px;background:var(--gold);border-radius:50%}
-    .question{border-left:5px solid var(--red);background:#fbf1f0;border-radius:10px;padding:15px 17px;margin:16px 0;font-size:clamp(1.18rem,2.8vw,1.55rem);font-weight:700;color:var(--navy)}
-    .entry{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.entry input{flex:1 1 200px;min-height:52px;border:2px solid #9aaebc;border-radius:10px;padding:10px 14px;font:inherit;font-size:1.15rem;color:var(--ink)}input:focus-visible,button:focus-visible{outline:4px solid #f3c957;outline-offset:2px}
-    button{border:0;border-radius:10px;background:var(--green);color:var(--white);font:inherit;font-weight:700;min-height:50px;padding:11px 18px;cursor:pointer;transition:filter .15s,transform .15s}button:hover{filter:brightness(1.08)}button:active{transform:translateY(1px)}button.secondary{background:var(--navy)}button.outline{color:var(--navy);background:var(--white);border:2px solid var(--navy)}button:disabled{opacity:.55;cursor:not-allowed}
-    .feedback{min-height:50px;margin:13px 0 0;padding:12px 14px;border-radius:10px;background:#eef2f3;color:var(--muted)}.feedback.good{color:var(--good);background:#e8f4ed}.feedback.bad{color:var(--bad);background:#fbebea}
-    .hint{display:block;margin-top:5px;color:var(--navy);font-weight:400}.progress{display:flex;align-items:center;gap:12px;margin:12px 0 16px;color:var(--muted);font-weight:700}.track{height:9px;background:#e7ecef;flex:1;border-radius:8px;overflow:hidden}.bar{height:100%;width:0;background:var(--green);transition:width .25s}
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    .successBanner{background:#edf6ef;border:1px solid #bad7c2;color:var(--good);padding:14px 16px;border-radius:10px;font-weight:700;margin:15px 0}
-    [hidden]{display:none!important}
-    .gather{background:#f9f4e6;border-left:5px solid var(--gold);padding:14px 16px;border-radius:8px;margin:16px 0}.gather strong{color:var(--navy)}
-    .gameTop{display:grid;grid-template-columns:minmax(150px,210px) 1fr;gap:18px;align-items:center;margin:16px 0}.dieWrap{text-align:center}.dieFace{width:132px;height:132px;margin:0 auto 12px;background:var(--red);border:5px solid #9e2d2a;border-radius:20px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:15px;box-shadow:0 9px 0 #7b2523;transition:transform .65s cubic-bezier(.2,.8,.2,1)}.dieFace.rolling{transform:rotate(720deg) scale(.93)}.pip{width:17px;height:17px;background:#fff;border-radius:50%;align-self:center;justify-self:center;opacity:0}.dieFace[data-value="1"] .p5,.dieFace[data-value="2"] .p1,.dieFace[data-value="2"] .p9,.dieFace[data-value="3"] .p1,.dieFace[data-value="3"] .p5,.dieFace[data-value="3"] .p9,.dieFace[data-value="4"] .p1,.dieFace[data-value="4"] .p3,.dieFace[data-value="4"] .p7,.dieFace[data-value="4"] .p9,.dieFace[data-value="5"] .p1,.dieFace[data-value="5"] .p3,.dieFace[data-value="5"] .p5,.dieFace[data-value="5"] .p7,.dieFace[data-value="5"] .p9,.dieFace[data-value="6"] .p1,.dieFace[data-value="6"] .p3,.dieFace[data-value="6"] .p4,.dieFace[data-value="6"] .p6,.dieFace[data-value="6"] .p7,.dieFace[data-value="6"] .p9{opacity:1}
-    .dieLabel{margin:0;color:var(--muted);font-weight:700}.turn{background:#eef3f6;border-radius:12px;padding:16px}.turn strong{font-size:1.16rem;color:var(--navy)}.score{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.scoreItem{background:#f5f7f8;border:1px solid var(--line);border-radius:9px;text-align:center;padding:8px}.scoreItem.current{border:2px solid var(--gold);background:#fff8e6}.scoreItem b{display:block;color:var(--navy)}.scoreItem span{font-size:1.25rem;font-weight:700;color:var(--red)}
-    footer{background:#e8edef;color:var(--muted);padding:20px;text-align:center;font-size:.9rem}footer strong{color:var(--navy)}
-    @media(max-width:640px){header{padding:19px 17px 22px}.gameTop{grid-template-columns:1fr}.dieFace{width:116px;height:116px}.score{grid-template-columns:repeat(2,1fr)}.entry button{width:100%}.card{border-radius:14px}}
+    :root{--navy:#17324d;--red:#ba3733;--green:#3b7654;--gold:#e1b353;--ink:#1e2a32;--muted:#52616b;--paper:#f4f7f5;--line:#d7e0e5;--white:#fff;--good:#17613b;--bad:#982c28;--shadow:0 10px 28px rgba(23,50,77,.11)}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+    header{background:var(--navy);color:var(--white);padding:23px max(18px,calc((100vw - 980px)/2)) 25px;border-bottom:7px solid var(--red)}
+    .eyebrow{margin:0 0 5px;color:#d6e3ec;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase}h1{font-size:clamp(1.8rem,4vw,2.65rem);line-height:1.12;margin:0}header p:last-child{margin:9px 0 0;color:#e1eaf0}
+    main{width:min(980px,calc(100% - 28px));margin:22px auto 56px}.card{background:var(--white);border:1px solid var(--line);border-radius:17px;padding:clamp(18px,3.5vw,30px);box-shadow:var(--shadow);margin-bottom:19px}
+    h2{color:var(--navy);font-size:clamp(1.35rem,3vw,1.8rem);margin:0 0 4px}.lead{color:var(--muted);margin:0 0 17px}.nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.nav button{flex:1 1 170px}
+    button{border:0;border-radius:10px;background:var(--green);color:var(--white);font:inherit;font-weight:700;min-height:49px;padding:10px 17px;cursor:pointer;transition:filter .15s,transform .15s}button:hover{filter:brightness(1.08)}button:active{transform:translateY(1px)}button.secondary{background:var(--navy)}button.outline{color:var(--navy);background:var(--white);border:2px solid var(--navy)}button:disabled{opacity:.55;cursor:not-allowed}button:focus-visible,input:focus-visible{outline:4px solid var(--gold);outline-offset:2px}
+    .question{border-left:5px solid var(--red);background:#fbf1f0;border-radius:9px;padding:14px 17px;margin:15px 0;font-size:clamp(1.2rem,2.8vw,1.55rem);font-weight:700;color:var(--navy)}.progress{display:flex;align-items:center;gap:11px;margin:11px 0 14px;color:var(--muted);font-weight:700}.track{height:9px;background:#e7ecef;flex:1;border-radius:8px;overflow:hidden}.bar{height:100%;width:0;background:var(--green);transition:width .2s}
+    .entry{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.entry input{flex:1 1 200px;min-height:52px;border:2px solid #9aaebc;border-radius:10px;padding:10px 14px;font:inherit;font-size:1.15rem;color:var(--ink)}.feedback{min-height:48px;margin:12px 0 0;padding:11px 13px;border-radius:9px;background:#eef2f3;color:var(--muted)}.feedback.good{color:var(--good);background:#e8f4ed}.feedback.bad{color:var(--bad);background:#fbebea}.controls{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.hint{display:block;margin-top:5px;color:var(--navy);font-weight:400}.done{background:#edf6ef;border:1px solid #bad7c2;color:var(--good);padding:14px 16px;border-radius:9px;font-weight:700;margin:14px 0}
+    .step{display:inline-block;margin-bottom:5px;color:var(--green);font-weight:700}.dieStage{display:grid;place-items:center;padding:14px 0 3px}.dieFace{width:150px;height:150px;background:var(--red);border:5px solid #9e2d2a;border-radius:22px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:18px;box-shadow:0 8px 0 #7b2523;transition:transform .5s cubic-bezier(.2,.8,.2,1)}.dieFace.rolling{transform:rotate(720deg) scale(.93)}.pip{width:18px;height:18px;background:#fff;border-radius:50%;align-self:center;justify-self:center;opacity:0}.dieFace[data-value="1"] .p5,.dieFace[data-value="2"] .p1,.dieFace[data-value="2"] .p9,.dieFace[data-value="3"] .p1,.dieFace[data-value="3"] .p5,.dieFace[data-value="3"] .p9,.dieFace[data-value="4"] .p1,.dieFace[data-value="4"] .p3,.dieFace[data-value="4"] .p7,.dieFace[data-value="4"] .p9,.dieFace[data-value="5"] .p1,.dieFace[data-value="5"] .p3,.dieFace[data-value="5"] .p5,.dieFace[data-value="5"] .p7,.dieFace[data-value="5"] .p9,.dieFace[data-value="6"] .p1,.dieFace[data-value="6"] .p3,.dieFace[data-value="6"] .p4,.dieFace[data-value="6"] .p6,.dieFace[data-value="6"] .p7,.dieFace[data-value="6"] .p9{opacity:1}.dieNumber{font-size:1.15rem;color:var(--muted);font-weight:700;margin:9px 0 14px}
+    footer{background:#e8edef;color:var(--muted);padding:18px;text-align:center;font-size:.9rem}footer strong{color:var(--navy)}[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:580px){header{padding:19px 17px 22px}.entry button{width:100%}.dieFace{width:132px;height:132px}.card{border-radius:14px}}
+    .focus-mode nav{display:none}.dice-mode nav,.dice-mode #quiz20,.dice-mode #easyQuiz,.dice-mode footer{display:none}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
   </style>
 </head>
@@ -34,83 +27,155 @@
   <header>
     <p class="eyebrow">BwR 7b · Prozentrechnung</p>
     <h1>Prozent-Training</h1>
-    <p>Rechne zuerst im Quiz. Danach wartet der Prozent-Penalty für eure Vierergruppe.</p>
+    <p>Rechne auf Papier mit und überprüfe dein Ergebnis hier selbst.</p>
   </header>
   <main>
-    <section class="card" id="quiz" aria-labelledby="quiz-title">
-      <span class="step">1 · Lernquiz</span>
-      <h2 id="quiz-title">Bequeme Prozentsätze</h2>
-      <p class="lead">Notiere deine Nebenrechnung auf kariertem Papier. Gib das Ergebnis mit oder ohne €-Zeichen ein. Bei einem Fehler bekommst du einen Tipp.</p>
-      <div class="progress" aria-label="Fortschritt"><span id="progressText">Aufgabe 1 von 7</span><div class="track"><div class="bar" id="progressBar"></div></div></div>
-      <div id="quizContent">
-        <div class="question" id="quizQuestion"></div>
-        <label class="sr-only" for="quizAnswer">Dein Ergebnis</label>
-        <div class="entry"><input id="quizAnswer" inputmode="decimal" autocomplete="off" placeholder="Ergebnis eingeben" aria-describedby="quizFeedback"><button id="quizCheck">Prüfen</button></div>
-        <div class="feedback" id="quizFeedback" role="status" aria-live="polite">Berechne zuerst still für dich.</div>
-        <div class="controls"><button class="secondary" id="quizNext" hidden>Nächste Aufgabe</button></div>
+    <nav class="nav" id="sectionNav" aria-label="Lernangebote">
+      <button class="secondary" data-show="quiz20">1 · Lernspiel</button>
+      <button class="secondary" data-show="easyQuiz">2 · Lernspiel</button>
+      <button class="outline" data-show="dice">Würfeln</button>
+    </nav>
+
+    <section class="card" id="quiz20" aria-labelledby="quiz20-title">
+      <span class="step">Lernspiel 1 · Arbeitsheft Nr. 20</span>
+      <h2 id="quiz20-title">Löse im Kopf und gehe zuerst auf 1 % zurück.</h2>
+      <p class="lead">Bearbeite die restlichen Aufgaben aus den Zeilen 4 bis 7. Schreibe deine Nebenrechnung auf kariertes Papier. Bei einem Fehler erhältst du einen Tipp.</p>
+      <div class="progress"><span id="progress20Text">Aufgabe 1 von 28</span><div class="track"><div class="bar" id="progress20Bar"></div></div></div>
+      <div id="quiz20Work">
+        <div class="question" id="question20"></div>
+        <label class="sr-only" for="answer20">Ergebnis</label>
+        <div class="entry"><input id="answer20" inputmode="decimal" autocomplete="off" placeholder="Ergebnis eingeben"><button id="check20">Prüfen</button></div>
+        <div class="feedback" id="feedback20" role="status" aria-live="polite">Rechne im Kopf und tippe dein Ergebnis ein.</div>
+        <div class="controls"><button class="secondary" id="next20" hidden>Nächste Aufgabe</button></div>
       </div>
-      <div id="quizDone" hidden>
-        <div class="successBanner" id="quizScore"></div>
-        <p>Jetzt kannst du mit drei weiteren fertigen Lernenden das Würfelspiel spielen.</p>
-        <button class="secondary" id="openGame">Zum Würfelspiel</button>
+      <div id="done20" hidden>
+        <div class="done" id="score20"></div>
+        <button class="secondary" data-show="easyQuiz">Weiter zu Lernspiel 2</button>
       </div>
     </section>
 
-    <section class="card" id="game" aria-labelledby="game-title" hidden>
-      <span class="step">2 · Für Vierergruppen</span>
-      <h2 id="game-title">Prozent-Penalty</h2>
-      <p class="lead">Löst die Aufgabe auf eurem karierten Papier. Ein richtiges Ergebnis zählt als Tor.</p>
-      <div class="gather"><strong>Wenn du fertig bist:</strong> Stelle dich leise am Schild „Bushaltestelle“ auf. Warte dort, bis drei weitere Lernende fertig sind. Bildet eine Vierergruppe. Rechnet die Nebenaufgaben auf kariertem Papier und würfelt hier reihum.</div>
-      <div class="score" id="scoreBoard" aria-label="Spielstand"></div>
-      <div class="gameTop">
-        <div class="dieWrap"><div class="dieFace" id="dieFace" data-value="1" role="img" aria-label="Würfel wartet"><i class="pip p1"></i><i class="pip p2"></i><i class="pip p3"></i><i class="pip p4"></i><i class="pip p5"></i><i class="pip p6"></i><i class="pip p7"></i><i class="pip p8"></i><i class="pip p9"></i></div><p class="dieLabel" id="roundLabel">Wurf 1 von 8</p></div>
-        <div class="turn"><strong id="turnLabel">Spielerin oder Spieler 1 ist dran.</strong><p id="turnPrompt">Würfle, um eine Aufgabe von 1 bis 6 zu erhalten.</p><button id="rollButton">Würfeln</button></div>
+    <section class="card" id="easyQuiz" aria-labelledby="easy-title" hidden>
+      <span class="step">Lernspiel 2 · Bequeme Prozentsätze</span>
+      <h2 id="easy-title">Nutze die Rechentipps.</h2>
+      <p class="lead">Notiere Nebenrechnungen auf kariertem Papier. Bei einem falschen Ergebnis bekommst du einen Rechentipp und kannst es erneut versuchen. Bei 16,67 % und 33,33 % gilt der eingegebene Dezimalwert genau; als Kopfrechentrick helfen ungefähr ein Sechstel beziehungsweise ein Drittel.</p>
+      <div class="progress"><span id="easyProgressText">Aufgabe 1 von 15</span><div class="track"><div class="bar" id="easyProgressBar"></div></div></div>
+      <div id="easyWork">
+        <div class="question" id="easyQuestion"></div>
+        <label class="sr-only" for="easyAnswer">Ergebnis</label>
+        <div class="entry"><input id="easyAnswer" inputmode="decimal" autocomplete="off" placeholder="Ergebnis eingeben"><button id="easyCheck">Prüfen</button></div>
+        <div class="feedback" id="easyFeedback" role="status" aria-live="polite">Rechne im Kopf oder mit einer Nebenrechnung.</div>
+        <div class="controls"><button class="secondary" id="easyNext" hidden>Nächste Aufgabe</button></div>
       </div>
-      <div id="gameTaskWrap" hidden>
-        <div class="question" id="gameQuestion"></div>
-        <label class="sr-only" for="gameAnswer">Dein Ergebnis</label>
-        <div class="entry"><input id="gameAnswer" inputmode="decimal" autocomplete="off" placeholder="Ergebnis eingeben"><button id="gameCheck">Prüfen</button></div>
-        <div class="feedback" id="gameFeedback" role="status" aria-live="polite">Nebenrechnung zuerst, Ergebnis danach.</div>
-        <div class="controls"><button class="secondary" id="gameNext" hidden>Nächster Wurf</button></div>
+      <div id="easyDone" hidden>
+        <div class="done" id="easyScore"></div>
+        <button class="secondary" data-show="dice">Zum Würfeln</button>
       </div>
-      <div id="gameDone" hidden class="successBanner"></div>
-      <p class="lead" style="margin:18px 0 0">Acht Würfe: Jede Person kommt zweimal dran. Bei einer falschen Antwort gibt es erst einen Tipp und einen zweiten Versuch.</p>
+    </section>
+
+    <section class="card" id="dice" aria-labelledby="dice-title" hidden>
+      <span class="step">Würfelfunktion</span>
+      <h2 id="dice-title">Würfeln</h2>
+      <div class="dieStage">
+        <div class="dieFace" id="dieFace" data-value="1" role="img" aria-label="Würfel zeigt 1"><i class="pip p1"></i><i class="pip p2"></i><i class="pip p3"></i><i class="pip p4"></i><i class="pip p5"></i><i class="pip p6"></i><i class="pip p7"></i><i class="pip p8"></i><i class="pip p9"></i></div>
+        <div class="dieNumber" id="dieNumber" aria-live="polite">1</div>
+        <button id="rollButton">Würfeln</button>
+      </div>
     </section>
   </main>
-  <footer><strong>Keine Anmeldung, kein Download und keine Namenseingabe.</strong><br>Die Antworten bleiben auf diesem Gerät und werden nicht übertragen.</footer>
+  <footer><strong>Ohne Anmeldung und ohne Namenseingabe.</strong><br>Antworten bleiben auf diesem Gerät und werden nicht übertragen.</footer>
   <script>
-    const quizItems=[
-      {q:'12 % von 260 € = ?',a:31.2,h:'Zerlege 12 % in 10 % und 2 %. 10 % von 260 € sind 26 €. Berechne 2 % über 1 %.'},
-      {q:'10 % von 800 € = ?',a:80,h:'10 % ist ein Zehntel. Teile 800 € durch 10.'},
-      {q:'20 % von 3.200 € = ?',a:640,h:'20 % ist ein Fünftel. Teile 3.200 € durch 5.'},
-      {q:'33 1/3 % von 12.300 € = ?',a:4100,h:'33 1/3 % ist ein Drittel. Teile 12.300 € durch 3.'},
-      {q:'12,5 % von 56 € = ?',a:7,h:'12,5 % ist ein Achtel. Teile 56 € durch 8.'},
-      {q:'5 % von 2.000 € = ?',a:100,h:'Berechne zuerst 1 % von 2.000 €. Danach nimm fünfmal diesen Anteil.'},
-      {q:'25 % von 240 € = ?',a:60,h:'25 % ist ein Viertel. Teile 240 € durch 4.'}
-    ];
-    const gameItems=[
-      {q:'10 % von 800 € = ?',a:80,h:'10 % ist ein Zehntel.'},
-      {q:'20 % von 3.200 € = ?',a:640,h:'20 % ist ein Fünftel.'},
-      {q:'33 1/3 % von 12.300 € = ?',a:4100,h:'33 1/3 % ist ein Drittel.'},
-      {q:'12,5 % von 56 € = ?',a:7,h:'12,5 % ist ein Achtel.'},
-      {q:'25 % von 240 € = ?',a:60,h:'25 % ist ein Viertel.'},
-      {q:'Der FCA verwandelte 48 von 65 Elfmetern. Wie hoch ist die Quote in %?',a:48*100/65,h:'Setze 65 Versuche = 100 %. Dann berechne 48 · 100 / 65. Runde auf zwei Nachkommastellen.'}
-    ];
-    const $=id=>document.getElementById(id);
-    let qIndex=0,qCorrect=0,qTries=0;
-    function parseGermanNumber(raw){let s=String(raw).trim().replace(/[€%\s]/g,'');if(!s)return NaN;if(s.includes(',')){s=s.replace(/\./g,'').replace(',','.')}else{s=s.replace(/\.(?=\d{3}(?:\D|$))/g,'')}return Number(s)}
-    function showQuiz(){const item=quizItems[qIndex];$('progressText').textContent=`Aufgabe ${qIndex+1} von ${quizItems.length}`;$('progressBar').style.width=`${(qIndex/quizItems.length)*100}%`;$('quizQuestion').textContent=item.q;$('quizAnswer').value='';$('quizFeedback').className='feedback';$('quizFeedback').textContent='Berechne zuerst still für dich.';$('quizNext').hidden=true;$('quizCheck').disabled=false;qTries=0;$('quizAnswer').focus()}
-    function checkQuiz(){const item=quizItems[qIndex],value=parseGermanNumber($('quizAnswer').value);if(Number.isNaN(value)){$('quizFeedback').className='feedback bad';$('quizFeedback').textContent='Bitte gib zuerst eine Zahl ein.';return}qTries++;if(Math.abs(value-item.a)<0.011){qCorrect++;$('quizFeedback').className='feedback good';$('quizFeedback').innerHTML='Richtig! <span class="hint">Der Rechenweg passt.</span>';$('quizNext').hidden=false;$('quizCheck').disabled=true;return}$('quizFeedback').className='feedback bad';if(qTries===1){$('quizFeedback').innerHTML='Noch nicht. Hier ist ein Tipp:<span class="hint">'+item.h+'</span>'}else{$('quizFeedback').innerHTML='Prüfe die Nebenrechnung und versuche es noch einmal.<span class="hint">'+item.h+'</span>'}}
-    function nextQuiz(){qIndex++;if(qIndex<quizItems.length){showQuiz();return}$('progressText').textContent='Quiz abgeschlossen';$('progressBar').style.width='100%';$('quizContent').hidden=true;$('quizDone').hidden=false;$('quizScore').textContent=`Geschafft: ${qCorrect} von ${quizItems.length} Aufgaben beim ersten richtigen Versuch.`}
-    $('quizCheck').addEventListener('click',checkQuiz);$('quizAnswer').addEventListener('keydown',e=>{if(e.key==='Enter')checkQuiz()});$('quizNext').addEventListener('click',nextQuiz);$('openGame').addEventListener('click',()=>{$('game').hidden=false;$('game').scrollIntoView({behavior:'smooth',block:'start'});$('gameTitle')?.focus()});
-    let round=0,player=0,rollValue=null,tries=0,scores=[0,0,0,0],roundDone=false;
-    function drawScores(){const b=$('scoreBoard');b.innerHTML='';scores.forEach((score,i)=>{const d=document.createElement('div');d.className='scoreItem'+(player===i&&round<8?' current':'');d.innerHTML=`<b>Person ${i+1}</b><span>${score} Tor${score===1?'':'e'}</span>`;b.appendChild(d)})}
-    function updateTurn(){if(round>=8)return;$('roundLabel').textContent=`Wurf ${round+1} von 8`;$('turnLabel').textContent=`Person ${player+1} ist dran.`;$('turnPrompt').textContent='Würfle, um eine Aufgabe von 1 bis 6 zu erhalten.';drawScores()}
-    function roll(){if(roundDone||round>=8)return;const face=Math.floor(Math.random()*6)+1;rollValue=face;tries=0;$('rollButton').disabled=true;$('dieFace').classList.add('rolling');setTimeout(()=>{$('dieFace').classList.remove('rolling');$('dieFace').dataset.value=face;$('dieFace').setAttribute('aria-label',`Würfel zeigt ${face}`);const item=gameItems[face-1];$('gameQuestion').textContent=`Aufgabe ${face}: ${item.q}`;$('gameTaskWrap').hidden=false;$('gameAnswer').value='';$('gameFeedback').className='feedback';$('gameFeedback').textContent='Nebenrechnung zuerst, Ergebnis danach.';$('gameCheck').disabled=false;$('gameNext').hidden=true;$('gameAnswer').focus()},660)}
-    function checkGame(){if(rollValue===null||roundDone)return;const value=parseGermanNumber($('gameAnswer').value);if(Number.isNaN(value)){$('gameFeedback').className='feedback bad';$('gameFeedback').textContent='Bitte gib zuerst eine Zahl ein.';return}const item=gameItems[rollValue-1];tries++;const correct=Math.abs(value-item.a)<0.011;if(correct){scores[player]++;$('gameFeedback').className='feedback good';$('gameFeedback').textContent='Tor! Richtig gerechnet.';finishTurn();return}if(tries===1){$('gameFeedback').className='feedback bad';$('gameFeedback').innerHTML='Noch kein Tor. Hier ist ein Tipp:<span class="hint">'+item.h+'</span>';return}$('gameFeedback').className='feedback bad';$('gameFeedback').innerHTML=`Kein Tor in diesem Versuch. Richtig wäre ${new Intl.NumberFormat('de-DE',{maximumFractionDigits:2}).format(item.a)}.<span class="hint">${item.h}</span>`;finishTurn()}
-    function finishTurn(){roundDone=true;$('gameCheck').disabled=true;$('gameNext').hidden=false;drawScores()}
-    function nextTurn(){round++;player=(player+1)%4;rollValue=null;roundDone=false;$('gameTaskWrap').hidden=true;$('rollButton').disabled=false;if(round>=8){$('roundLabel').textContent='Acht Würfe gespielt';$('rollButton').hidden=true;$('turnPrompt').textContent='Das Spiel ist beendet.';const max=Math.max(...scores),winners=scores.map((s,i)=>s===max?`Person ${i+1}`:null).filter(Boolean);$('gameDone').hidden=false;$('gameDone').textContent=winners.length===4?'Unentschieden: Alle vier Personen stehen gleich.':winners.length>1?`Unentschieden zwischen ${winners.join(' und ')} mit ${max} Toren.`:`${winners[0]} gewinnt mit ${max} Tor${max===1?'':'en'}!`;drawScores();return}updateTurn()}
-    $('rollButton').addEventListener('click',roll);$('gameCheck').addEventListener('click',checkGame);$('gameAnswer').addEventListener('keydown',e=>{if(e.key==='Enter')checkGame()});$('gameNext').addEventListener('click',nextTurn);updateTurn();showQuiz();
+    const questions20 = [
+      [9,50],[9,300],[9,600],[9,1500],[9,2500],[9,3500],[9,5000],
+      [15,60],[15,200],[15,500],[15,3000],[15,5000],[15,6800],[15,7000],
+      [20,25],[20,120],[20,640],[20,1300],[20,4500],[20,7200],[20,9000],
+      [200,12],[200,34],[200,760],[200,1400],[200,3650],[200,4700],[200,6500]
+    ].map(([p, gw]) => ({p, gw, a: p * gw / 100}));
+
+    const easyItems = [
+      {p:5,gw:200},{p:10,gw:350},{p:20,gw:450},{p:25,gw:240},{p:50,gw:860},
+      {p:12.5,gw:800},{p:12.5,gw:560},{p:16.67,gw:600},{p:16.67,gw:300},{p:20,gw:650},
+      {p:25,gw:1280},{p:33.33,gw:300},{p:33.33,gw:600},{p:10,gw:4200},{p:5,gw:860}
+    ].map(item => ({...item,a:item.p*item.gw/100}));
+
+    const $ = id => document.getElementById(id);
+    const money = value => new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}).format(value);
+    function parseGermanNumber(raw){
+      let value=String(raw).trim().replace(/[€%\s]/g,'');
+      if(!value)return NaN;
+      if(value.includes(','))value=value.replace(/\./g,'').replace(',','.');
+      else value=value.replace(/\.(?=\d{3}(?:\D|$))/g,'');
+      return Number(value);
+    }
+    function hint(item){
+      const onePercent=item.gw/100;
+      return `Gehe zuerst auf 1 %: 1 % von ${money(item.gw)} € sind ${money(onePercent)} €. Multipliziere diesen Wert anschließend mit ${item.p}.`;
+    }
+    function showSection(id){
+      for(const section of ['quiz20','easyQuiz','dice'])$(section).hidden=section!==id;
+      document.body.classList.toggle('dice-mode',id==='dice'&&document.body.classList.contains('focus-mode'));
+      if(id==='quiz20')$('answer20').focus();
+      if(id==='easyQuiz')$('easyAnswer').focus();
+      if(id==='dice')$('rollButton').focus();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    document.querySelectorAll('[data-show]').forEach(button=>button.addEventListener('click',()=>showSection(button.dataset.show)));
+
+    let i20=0,correct20=0,tries20=0;
+    function show20(){
+      const item=questions20[i20];
+      $('progress20Text').textContent=`Aufgabe ${i20+1} von ${questions20.length}`;
+      $('progress20Bar').style.width=`${i20/questions20.length*100}%`;
+      $('question20').textContent=`${item.p} % von ${money(item.gw)} € = ?`;
+      $('answer20').value='';$('feedback20').className='feedback';$('feedback20').textContent='Rechne im Kopf und tippe dein Ergebnis ein.';
+      $('next20').hidden=true;$('check20').disabled=false;tries20=0;
+    }
+    function check20(){
+      const value=parseGermanNumber($('answer20').value),item=questions20[i20];
+      if(Number.isNaN(value)){$('feedback20').className='feedback bad';$('feedback20').textContent='Bitte gib zuerst eine Zahl ein.';return}
+      tries20++;
+      if(Math.abs(value-item.a)<0.011){correct20++;$('feedback20').className='feedback good';$('feedback20').textContent=`Richtig! ${money(item.a)} €`;$('next20').hidden=false;$('check20').disabled=true;return}
+      $('feedback20').className='feedback bad';
+      $('feedback20').textContent=tries20===1?`Noch nicht. Tipp: ${hint(item)}`:`Versuche es noch einmal. Tipp: ${hint(item)}`;
+    }
+    function next20(){
+      i20++;
+      if(i20<questions20.length){show20();return}
+      $('progress20Text').textContent='Alle Aufgaben bearbeitet';$('progress20Bar').style.width='100%';$('quiz20Work').hidden=true;$('done20').hidden=false;
+      $('score20').textContent=`Fertig: ${correct20} von ${questions20.length} Aufgaben beim ersten richtigen Versuch.`;
+    }
+    $('check20').addEventListener('click',check20);$('answer20').addEventListener('keydown',event=>{if(event.key==='Enter')check20()});$('next20').addEventListener('click',next20);show20();
+
+    let ie=0,correctEasy=0,triesEasy=0;
+    function showEasy(){
+      const item=easyItems[ie];$('easyProgressText').textContent=`Aufgabe ${ie+1} von ${easyItems.length}`;$('easyProgressBar').style.width=`${ie/easyItems.length*100}%`;
+      $('easyQuestion').textContent=`${String(item.p).replace('.',',')} % von ${money(item.gw)} € = ?`;
+      $('easyAnswer').value='';$('easyFeedback').className='feedback';$('easyFeedback').textContent='Rechne im Kopf oder mit einer Nebenrechnung.';$('easyNext').hidden=true;$('easyCheck').disabled=false;triesEasy=0;
+    }
+    function checkEasy(){
+      const item=easyItems[ie],value=parseGermanNumber($('easyAnswer').value);
+      if(Number.isNaN(value)){$('easyFeedback').className='feedback bad';$('easyFeedback').textContent='Bitte gib zuerst eine Zahl ein.';return}
+      triesEasy++;
+      if(Math.abs(value-item.a)<=0.025){correctEasy++;$('easyFeedback').className='feedback good';$('easyFeedback').textContent=`Richtig! Genau gerechnet: ${money(item.a)} €. Bei 16,67 % und 33,33 % ist der Rechentipp ein guter Überschlag.`;$('easyNext').hidden=false;$('easyCheck').disabled=true;return}
+      $('easyFeedback').className='feedback bad';$('easyFeedback').textContent=triesEasy===1?`Noch nicht. Tipp: ${hint(item)}`:`Prüfe deine Rechnung und versuche es noch einmal. Tipp: ${hint(item)}`;
+    }
+    function nextEasy(){
+      ie++;
+      if(ie<easyItems.length){showEasy();return}
+      $('easyProgressText').textContent='Alle 15 Aufgaben bearbeitet';$('easyProgressBar').style.width='100%';$('easyWork').hidden=true;$('easyDone').hidden=false;
+      $('easyScore').textContent=`Fertig: ${correctEasy} von ${easyItems.length} Aufgaben beim ersten richtigen Versuch.`;
+    }
+    $('easyCheck').addEventListener('click',checkEasy);$('easyAnswer').addEventListener('keydown',event=>{if(event.key==='Enter')checkEasy()});$('easyNext').addEventListener('click',nextEasy);showEasy();
+
+    $('rollButton').addEventListener('click',()=>{
+      const face=Math.floor(Math.random()*6)+1,die=$('dieFace');
+      $('rollButton').disabled=true;die.classList.add('rolling');
+      window.setTimeout(()=>{die.classList.remove('rolling');die.dataset.value=face;die.setAttribute('aria-label',`Würfel zeigt ${face}`);$('dieNumber').textContent=face;$('rollButton').disabled=false;$('rollButton').focus()},520);
+    });
+    const route=location.hash.slice(1);
+    if(['lernspiel1','lernspiel2','wuerfeln'].includes(route)){
+      document.body.classList.add('focus-mode');
+      showSection(route==='lernspiel1'?'quiz20':route==='lernspiel2'?'easyQuiz':'dice');
+    }
   </script>
 </body>
 </html>

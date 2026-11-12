@@ -12,18 +12,11 @@
 <body>
 <header><div class="eyebrow">BwR · Unterrichtsauswertung · j.just</div><h1>Prozentwert-Training</h1><p>Ergebnisdateien der Klasse sammeln und als Tabelle auswerten</p></header>
 <main>
-<div class="privacy"><b>Lokale Auswertung:</b> Diese Seite sendet keine Daten an einen Server. Ergebnisdateien und Namenszuordnungen bleiben nur im aktuellen Browser-Tab. Beim Schließen des Tabs werden sie gelöscht; lade die Tabelle vorher herunter.</div>
+<div class="privacy"><b>Lokale Auswertung:</b> Diese Seite sendet keine Daten an einen Server. Importierte Ergebnisdateien bleiben nur im aktuellen Browser-Tab. Beim Schließen des Tabs werden sie gelöscht; lade die Tabelle vorher herunter.</div>
 <section class="grid">
 <div class="card">
-<h2>1 · Schülercodes Namen zuordnen</h2>
-<p class="sub">Eine Zeile pro Person im Format <b>Code; Name</b>. Beispiel: <code>A07; Jan</code>. Die Zuordnung wird nur lokal gespeichert.</p>
-<textarea id="rosterInput" aria-label="Schülercodes und Namen" placeholder="A01; Name&#10;A02; Name&#10;A03; Name"></textarea>
-<div class="buttons"><button id="saveRoster">Namenszuordnung übernehmen</button></div>
-<div id="rosterStatus" class="status"></div>
-</div>
-<div class="card">
-<h2>2 · Ergebnisdateien importieren</h2>
-<p class="sub">Wähle mehrere JSON-Dateien aus, die die Schüler:innen von ihren iPads abgegeben haben. Neue Dateien ergänzen die vorhandene Auswertung; derselbe Code wird durch den neueren Versuch ersetzt.</p>
+<h2>Ergebnisdateien importieren</h2>
+<p class="sub">Wähle mehrere JSON-Dateien aus, die die Schüler:innen von ihren iPads abgegeben haben. Die Namen stehen direkt in den Dateien. Ein neuerer Versuch desselben Namens ersetzt den älteren.</p>
 <label class="file-button" for="files">Ergebnisdateien wählen</label><input id="files" type="file" accept=".json,application/json" multiple>
 <div id="importStatus" class="status">Noch keine Ergebnisdateien importiert.</div>
 </div>
@@ -32,7 +25,7 @@
 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap"><div><h2>Klassenübersicht</h2><p class="sub">Zeilen: Schüler:innen · Spalten: Aufgabennummern · Grün: richtig · Rot: falsch</p></div><span id="countPill" class="pill">0 Schüler:innen</span></div>
 <div class="buttons"><button id="csvBtn" class="secondary">Tabelle als CSV herunterladen</button><button id="htmlBtn" class="secondary">Farbiges Protokoll herunterladen</button><button id="resetBtn" class="danger">Neue Klasse · Auswertung zurücksetzen</button></div>
 <div id="tableArea" class="table-wrap" style="margin-top:14px"><div class="empty-state">Importiere zuerst die Ergebnisdateien der Schüler:innen.</div></div>
-<p class="help" style="margin:12px 0 0">Der Reset löscht die hier gespeicherten Importe und Namenszuordnungen. Bereits heruntergeladene Dateien auf dem iPad oder Computer müssen separat gelöscht werden.</p>
+<p class="help" style="margin:12px 0 0">Der Reset löscht die hier gespeicherten Importe. Bereits heruntergeladene Dateien auf dem iPad oder Computer müssen separat gelöscht werden.</p>
 </section>
 </main>
 <footer>j.just · Prozentwert-Training · Lehrkraft-Auswertung</footer>
@@ -40,21 +33,20 @@
 (function(){
 'use strict';
 var STORE_KEY='pmk-teacher-results-v1';
-var state={records:{},roster:{}};
+var state={records:{}};
 var $=function(id){return document.getElementById(id)};
 function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function readState(){try{var v=JSON.parse(sessionStorage.getItem(STORE_KEY)||'{}');if(v&&typeof v==='object')state={records:v.records||{},roster:v.roster||{}}}catch(e){state={records:{},roster:{}}}}
+function readState(){try{var v=JSON.parse(sessionStorage.getItem(STORE_KEY)||'{}');if(v&&typeof v==='object')state={records:v.records||{}}}catch(e){state={records:{}}}}
 function saveState(){try{sessionStorage.setItem(STORE_KEY,JSON.stringify(state))}catch(e){alert('Der lokale Speicher ist voll. Bitte exportiere die Tabelle und setze alte Daten zurück.')}}
-function parseRoster(text){var map={};text.split(/\r?\n/).forEach(function(line){var s=line.trim();if(!s)return;var parts=s.split(';');if(parts.length<2)return;var code=parts.shift().trim().toUpperCase();var name=parts.join(';').trim();if(code&&name)map[code]=name});return map}
 function render(){
- var records=Object.keys(state.records).map(function(code){return state.records[code]}).sort(function(a,b){return String(a.studentCode).localeCompare(String(b.studentCode),'de',{numeric:true})});
+ var records=Object.keys(state.records).map(function(key){return state.records[key]}).sort(function(a,b){return String(a.studentName).localeCompare(String(b.studentName),'de',{numeric:true})});
  $('countPill').textContent=records.length+' Schüler:innen';
  if(!records.length){$('tableArea').innerHTML='<div class="empty-state">Importiere zuerst die Ergebnisdateien der Schüler:innen.</div>';return}
  var head='<thead><tr><th>Punkte</th><th>Name</th>';for(var n=1;n<=20;n++)head+='<th>Aufgabe '+n+'</th>';head+='</tr></thead>';
  var body='<tbody>';
  records.forEach(function(r){
    var byNumber={};(Array.isArray(r.answers)?r.answers:[]).forEach(function(a){byNumber[Number(a.taskNumber)]=a});
-   var name=state.roster[String(r.studentCode||'').toUpperCase()]||('Code '+String(r.studentCode||''));
+   var name=String(r.studentName||'Name fehlt');
    body+='<tr><td class="score">'+escapeHtml(r.points||0)+' / '+escapeHtml(r.maxPoints||0)+' P</td><td class="name">'+escapeHtml(name)+'</td>';
    for(var i=1;i<=20;i++){var a=byNumber[i];if(!a||!a.attempted){body+='<td class="none">–</td>'}else{var detail=(a.correctAnswer?'&#10;Soll: '+escapeHtml(a.correctAnswer):'');body+='<td class="'+(a.correct?'good':'bad')+'" title="Kapitel '+escapeHtml(a.chapter||'')+detail+'">'+escapeHtml(a.answer||'—')+'</td>'}}
    body+='</tr>';
@@ -62,14 +54,13 @@ function render(){
  body+='</tbody>';$('tableArea').innerHTML='<table id="resultsTable">'+head+body+'</table>';
 }
 function csvCell(value){var s=String(value==null?'':value);return '"'+s.replace(/"/g,'""')+'"'}
-function exportCsv(){var records=Object.keys(state.records).map(function(code){return state.records[code]}).sort(function(a,b){return String(a.studentCode).localeCompare(String(b.studentCode),'de',{numeric:true})});if(!records.length){alert('Noch keine Ergebnisdateien importiert.');return}var rows=[['Punkte','Name'].concat(Array.from({length:20},function(_,i){return 'Aufgabe '+(i+1)}))];records.forEach(function(r){var by={};(r.answers||[]).forEach(function(a){by[Number(a.taskNumber)]=a});var row=[(r.points||0)+' / '+(r.maxPoints||0)+' P',state.roster[String(r.studentCode||'').toUpperCase()]||('Code '+r.studentCode)];for(var i=1;i<=20;i++){var a=by[i];row.push(!a||!a.attempted?'':String(a.answer||'')+(a.correct?' (richtig)':' (falsch)'))}rows.push(row)});var csv='\ufeff'+rows.map(function(row){return row.map(csvCell).join(';')}).join('\r\n');downloadBlob(csv,'Prozenttraining_Klassenauswertung.csv','text/csv;charset=utf-8')}
+function exportCsv(){var records=Object.keys(state.records).map(function(key){return state.records[key]}).sort(function(a,b){return String(a.studentName).localeCompare(String(b.studentName),'de',{numeric:true})});if(!records.length){alert('Noch keine Ergebnisdateien importiert.');return}var rows=[['Punkte','Name'].concat(Array.from({length:20},function(_,i){return 'Aufgabe '+(i+1)}))];records.forEach(function(r){var by={};(r.answers||[]).forEach(function(a){by[Number(a.taskNumber)]=a});var row=[(r.points||0)+' / '+(r.maxPoints||0)+' P',r.studentName||'Name fehlt'];for(var i=1;i<=20;i++){var a=by[i];row.push(!a||!a.attempted?'':String(a.answer||'')+(a.correct?' (richtig)':' (falsch)'))}rows.push(row)});var csv='\ufeff'+rows.map(function(row){return row.map(csvCell).join(';')}).join('\r\n');downloadBlob(csv,'Prozenttraining_Klassenauswertung.csv','text/csv;charset=utf-8')}
 function exportHtml(){var table=$('resultsTable');if(!table){alert('Noch keine Ergebnisdateien importiert.');return}var html='<!doctype html><html lang="de"><meta charset="utf-8"><title>Prozentwert-Training · Klassenauswertung</title><style>body{font:13px Arial,sans-serif;padding:20px;color:#111}table{border-collapse:collapse;white-space:nowrap}th,td{border:1px solid #bbb;padding:7px 9px;text-align:center}th{background:#eaf0fb}.score{font-weight:bold;color:#111}.name{text-align:left;font-weight:bold}.good{color:#13833d;font-weight:bold}.bad{color:#bf2637;font-weight:bold}.none{color:#aaa}</style><h1>Prozentwert-Training · Klassenauswertung</h1><p>Erstellt am '+escapeHtml(new Date().toLocaleDateString('de-DE'))+' · j.just</p>'+table.outerHTML+'</html>';downloadBlob(html,'Prozenttraining_Klassenauswertung.html','text/html;charset=utf-8')}
 function downloadBlob(content,name,type){var blob=new Blob([content],{type:type});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000)}
-$('saveRoster').addEventListener('click',function(){state.roster=parseRoster($('rosterInput').value);saveState();render();$('rosterStatus').textContent=Object.keys(state.roster).length+' Namenszuordnungen lokal gespeichert.'});
-$('files').addEventListener('change',async function(e){var files=Array.from(e.target.files||[]);if(!files.length)return;var imported=0,skipped=0,replaced=0;for(var i=0;i<files.length;i++){try{var r=JSON.parse(await files[i].text());if(r.format!=='prozentwert-training-result'||!r.studentCode||!Array.isArray(r.answers)){skipped++;continue}r.studentCode=String(r.studentCode).trim().toUpperCase();var prev=state.records[r.studentCode];if(prev)replaced++;if(!prev||String(r.completedAt||'')>=String(prev.completedAt||''))state.records[r.studentCode]=r;imported++}catch(err){skipped++}}saveState();render();$('importStatus').textContent=imported+' Datei(en) eingelesen'+(replaced?' · '+replaced+' Code(s) aktualisiert':'')+(skipped?' · '+skipped+' ungültige Datei(en) übersprungen':'')+'. Die Auswertung bleibt lokal gespeichert.';e.target.value=''});
+$('files').addEventListener('change',async function(e){var files=Array.from(e.target.files||[]);if(!files.length)return;var imported=0,skipped=0,replaced=0;for(var i=0;i<files.length;i++){try{var r=JSON.parse(await files[i].text());var name=String(r.studentName||'').trim().replace(/\s+/g,' ');if(r.format!=='prozentwert-training-result'||!name||!Array.isArray(r.answers)){skipped++;continue}r.studentName=name;var key=name.toLocaleLowerCase('de-DE');var prev=state.records[key];if(prev)replaced++;if(!prev||String(r.completedAt||'')>=String(prev.completedAt||''))state.records[key]=r;imported++}catch(err){skipped++}}saveState();render();$('importStatus').textContent=imported+' Datei(en) eingelesen'+(replaced?' · '+replaced+' Datei(en) mit gleichem Namen aktualisiert':'')+(skipped?' · '+skipped+' ungültige Datei(en) übersprungen':'')+'. Die Auswertung bleibt lokal gespeichert.';e.target.value=''});
 $('csvBtn').addEventListener('click',exportCsv);$('htmlBtn').addEventListener('click',exportHtml);
-$('resetBtn').addEventListener('click',function(){if(!confirm('Alle auf diesem Gerät importierten Ergebnisse und Namenszuordnungen löschen?'))return;state={records:{},roster:{}};try{sessionStorage.removeItem(STORE_KEY)}catch(e){}$('rosterInput').value='';$('rosterStatus').textContent='';$('importStatus').textContent='Noch keine Ergebnisdateien importiert.';render()});
-readState();$('rosterInput').value=Object.keys(state.roster).sort().map(function(code){return code+'; '+state.roster[code]}).join('\n');render();
+$('resetBtn').addEventListener('click',function(){if(!confirm('Alle auf diesem Gerät importierten Ergebnisse löschen?'))return;state={records:{}};try{sessionStorage.removeItem(STORE_KEY)}catch(e){}$('importStatus').textContent='Noch keine Ergebnisdateien importiert.';render()});
+readState();render();
 })();
 </script>
 </body>

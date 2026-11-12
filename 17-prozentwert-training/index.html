@@ -114,11 +114,11 @@
     <div id="chPick" class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs sm:text-sm"></div>
     <div id="chPickHint" class="mt-2 hidden text-sm font-semibold text-rose-600">Wähle mindestens ein Kapitel aus.</div>
 
-    <label class="block mt-6 text-sm font-semibold text-slate-600" for="codeInput">Dein Schülercode (von der Lehrkraft)</label>
-    <input id="codeInput" type="text" autocomplete="off" autocapitalize="characters" maxlength="12" placeholder="z. B. A07"
+    <label class="block mt-6 text-sm font-semibold text-slate-600" for="studentNameInput">Dein Name</label>
+    <input id="studentNameInput" type="text" autocomplete="name" autocapitalize="words" maxlength="80" placeholder="Vorname Nachname"
       class="mt-1 w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none select-text">
-    <p id="codeHint" class="mt-2 hidden text-sm font-semibold text-rose-600">Bitte gib deinen Schülercode ein (2–12 Buchstaben oder Zahlen).</p>
-    <p class="mt-2 text-xs text-slate-500">Bitte keinen Namen eingeben. Dein Code steht später in der Ergebnisdatei.</p>
+    <p id="nameHint" class="mt-2 hidden text-sm font-semibold text-rose-600">Bitte gib deinen Namen ein.</p>
+    <p class="mt-2 text-xs text-slate-500">Dein Name wird in der Ergebnisdatei für die Lehrkraft gespeichert.</p>
     <button id="startBtn" class="key mt-5 w-full rounded-2xl bg-indigo-600 py-4 text-xl font-bold text-white shadow-lg hover:bg-indigo-700">
       Los geht's →
     </button>
@@ -130,8 +130,8 @@
       <div class="chip rounded-full px-4 py-1 text-lg font-bold">Aufgabe <span id="qNum">1</span> / <span id="qTotal">20</span></div>
       <div class="flex items-center gap-2">
         <button id="quitBtn" class="key chip rounded-full px-3 py-1 text-sm font-bold">⏹ Beenden</button>
-        <div id="streak" class="chip rounded-full px-3 py-1 text-lg font-bold opacity-0 transition-opacity">🔥 0</div>
-        <div class="chip rounded-full px-4 py-1 text-lg font-bold">⭐ <span id="pts">0</span> / <span id="maxPts">0</span></div>
+        <div id="streak" class="hidden chip rounded-full px-3 py-1 text-lg font-bold opacity-0 transition-opacity">🔥 0</div>
+        <div class="hidden chip rounded-full px-4 py-1 text-lg font-bold">⭐ <span id="pts">0</span> / <span id="maxPts">0</span></div>
       </div>
     </div>
     <div class="chip mb-4 h-3.5 w-full overflow-hidden rounded-full">
@@ -168,45 +168,25 @@
   <!-- ===================== ZWISCHENAUSWERTUNG ===================== -->
   <section id="interim" class="hidden w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-6 sm:p-10 pop text-center">
     <div id="imBadge" class="inline-block rounded-full px-4 py-1 text-sm font-bold"></div>
-    <h2 class="mt-3 text-3xl font-extrabold text-slate-900">Kapitel geschafft! 🎉</h2>
-    <div id="imStars" class="mt-3 text-5xl tracking-widest"></div>
-    <div class="mt-3 flex items-end justify-center gap-2">
-      <span id="imPts" class="text-6xl font-black text-indigo-600"></span>
-      <span class="text-2xl font-bold text-slate-400 mb-2">/ <span id="imMax"></span> Punkte</span>
-    </div>
-    <p id="imTotal" class="mt-2 text-lg text-slate-600"></p>
+    <h2 class="mt-3 text-3xl font-extrabold text-slate-900">Kapitel abgeschlossen</h2>
     <p id="imNext" class="mt-5 text-lg text-slate-700"></p>
     <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
       <button id="imContinue" class="key rounded-2xl bg-indigo-600 py-4 text-xl font-bold text-white shadow-lg hover:bg-indigo-700">Weiter →</button>
       <button id="imStop" class="key rounded-2xl bg-slate-100 py-4 text-xl font-bold text-slate-700 shadow-sm hover:bg-slate-200">🏁 Hier aufhören</button>
     </div>
-    <p class="mt-3 text-sm text-slate-500">Dein Stand ist gespeichert. Du kannst auch später weitermachen.</p>
+    <p class="mt-3 text-sm text-slate-500">Dein Lernstand ist auf diesem Gerät gespeichert.</p>
   </section>
 
   <!-- ===================== ERGEBNIS ===================== -->
   <section id="result" class="hidden w-full max-w-3xl bg-white rounded-3xl shadow-2xl p-6 sm:p-10 pop">
     <div class="text-center">
-      <div id="stars" class="text-6xl tracking-widest"></div>
-      <h2 id="resTitle" class="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900"></h2>
-      <p id="resName" class="mt-1 text-lg text-slate-500"></p>
-      <p id="resScope" class="mt-1 text-base font-semibold text-slate-600"></p>
-      <div class="mt-6 flex items-end justify-center gap-2">
-        <span id="resPts" class="text-7xl font-black text-indigo-600"></span>
-        <span class="text-3xl font-bold text-slate-400 mb-2">/ <span id="resMax"></span> Punkte</span>
-      </div>
-      <p class="mt-2 text-xl text-slate-600"><span id="resPct" class="font-bold"></span> · ⏱ <span id="resTime"></span></p>
-      <div class="mx-auto mt-5 h-4 max-w-md overflow-hidden rounded-full bg-slate-100">
-        <div id="resBar" class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400 transition-all duration-1000" style="width:0%"></div>
-      </div>
+      <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900">Danke für deine Bearbeitung.</h2>
+      <p id="resName" class="mt-2 text-lg text-slate-600"></p>
+      <p class="mt-3 text-base text-slate-600">Deine Ergebnisdatei kannst du jetzt herunterladen.</p>
     </div>
-    <div id="chStats" class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center"></div>
-    <details class="mt-6 rounded-2xl bg-slate-50 p-4">
-      <summary class="cursor-pointer text-lg font-semibold text-slate-700">Alle Aufgaben ansehen</summary>
-      <ol id="resList" class="mt-3 space-y-2 text-base"></ol>
-    </details>
     <div class="mt-6 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-center">
       <p class="font-bold text-slate-800">Ergebnis an die Lehrkraft abgeben</p>
-      <p class="mt-1 text-sm text-slate-600">Lade deine Datei herunter und gib sie über den vereinbarten Abgabeweg ab. Sie enthält nur deinen Schülercode und deine Ergebnisse.</p>
+      <p class="mt-1 text-sm text-slate-600">Gib die heruntergeladene Datei anschließend bei deiner Lehrkraft ab.</p>
       <button id="downloadResultBtn" class="key mt-3 w-full rounded-2xl bg-emerald-600 py-4 text-lg font-bold text-white shadow-lg hover:bg-emerald-700">⬇️ Ergebnisdatei herunterladen</button>
       <p id="downloadHint" class="mt-2 text-sm text-slate-600"></p>
     </div>
@@ -337,7 +317,7 @@ const TASKS = [
 ];
 
 /* ================= Zustand ================= */
-let tasks = [], idx = 0, score = 0, maxScore = 0, streak = 0, input = '', phase = '', startTime = 0, studentCode = '';
+let tasks = [], idx = 0, score = 0, maxScore = 0, streak = 0, input = '', phase = '', startTime = 0, studentName = '';
 let picked = [1, 2, 3, 4], endedEarly = false;
 const cur = () => tasks[idx];
 
@@ -346,18 +326,18 @@ const SAVE_KEY = 'pmk-skilager-v4';
 const RESULT_KEY = 'pmk-skilager-last-result-v1';
 function saveState() {
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({ tasks, idx, score, studentCode, picked, phase, input, elapsed: Date.now() - startTime, date: Date.now() }));
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ tasks, idx, score, studentName, picked, phase, input, elapsed: Date.now() - startTime, date: Date.now() }));
   } catch (e) {}
 }
-function validStudentCode(value) { return /^[A-Z0-9_-]{2,12}$/.test(value); }
+function validStudentName(value) { return value.trim().length >= 2 && value.trim().length <= 80; }
 function loadState() {
   try {
     let s = JSON.parse(localStorage.getItem(SAVE_KEY));
-    if (s && Array.isArray(s.tasks) && s.tasks.length) return s;
+    if (s && Array.isArray(s.tasks) && s.tasks.length) { s.studentName = s.studentName || ''; delete s.studentCode; return s; }
     s = JSON.parse(localStorage.getItem('pmk-skilager-v3'));
     if (!s || !Array.isArray(s.tasks) || !s.tasks.length) return null;
-    s.studentCode = '';
-    delete s.studentName;
+    s.studentName = '';
+    delete s.studentCode;
     localStorage.setItem(SAVE_KEY, JSON.stringify(s));
     return s;
   } catch (e) { return null; }
@@ -385,12 +365,12 @@ function renderPick() {
 
 function newRound() {
   if (!picked.length) { $('chPickHint').classList.remove('hidden'); return; }
-  if (!validStudentCode(studentCode)) {
-    $('codeHint').classList.remove('hidden');
-    $('codeInput').focus();
+  if (!validStudentName(studentName)) {
+    $('nameHint').classList.remove('hidden');
+    $('studentNameInput').focus();
     return;
   }
-  $('codeHint').classList.add('hidden');
+  $('nameHint').classList.add('hidden');
   clearState();
   try { localStorage.removeItem(RESULT_KEY); } catch (e) {}
   tasks = TASKS.map((d, taskIndex) => ({ d, taskNumber: taskIndex + 1 }))
@@ -418,7 +398,7 @@ function beginQuiz() {
 }
 
 function resume(s) {
-  tasks = s.tasks; idx = s.idx; score = s.score; studentCode = s.studentCode || ''; picked = s.picked || [1, 2, 3, 4];
+  tasks = s.tasks; idx = s.idx; score = s.score; studentName = s.studentName || studentName; picked = s.picked || [1, 2, 3, 4];
   startTime = Date.now() - (s.elapsed || 0); streak = 0; endedEarly = false;
   maxScore = tasks.reduce((sum, task) => sum + task.max, 0);
   const t = cur();
@@ -448,23 +428,14 @@ function startTask() {
 }
 
 /* ---------- Kapitel-Zwischenauswertung ---------- */
-const starsFor = pct => pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 50 ? 1 : 0;
-const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
 function chapterSums(c, onlyDone) {
   const ts = tasks.filter(t => t.ch === c && (!onlyDone || t.done));
   return { e: ts.reduce((s, t) => s + t.earned, 0), m: ts.reduce((s, t) => s + t.max, 0), n: ts.length };
 }
 function showInterim() {
-  const c = cur().ch, next = tasks[idx + 1].ch, { e, m } = chapterSums(c, true);
-  const pct = Math.round(e / m * 100), st = starsFor(pct);
+  const c = cur().ch, next = tasks[idx + 1].ch;
   $('imBadge').className = 'inline-block rounded-full px-4 py-1 text-sm font-bold ' + CH[c].cls;
   $('imBadge').textContent = CH[c].name;
-  $('imStars').textContent = starStr(st);
-  $('imStars').className = 'mt-3 text-5xl tracking-widest ' + (st ? 'text-amber-400' : 'text-slate-300');
-  $('imPts').textContent = e;
-  $('imMax').textContent = m;
-  const doneMax = tasks.filter(t => t.done).reduce((s, t) => s + t.max, 0);
-  $('imTotal').textContent = `Bisher insgesamt: ${score} von ${doneMax} Punkten`;
   $('imNext').innerHTML = `Als Nächstes: <b>${CH[next].name}</b><br><span class="text-slate-500">${CH[next].sub}</span>`;
   $('imContinue').textContent = `Weiter mit Kapitel ${next} →`;
   idx++; saveState();
@@ -673,7 +644,7 @@ function makeResultFile() {
     else if (t.given !== undefined) answer = fu(t.given, t.u);
     return { taskNumber: t.taskNumber || i + 1, chapter: t.ch, answer, correct: Boolean(t.done && t.ok), attempted: Boolean(t.done), correctAnswer: fu(t.W, t.u), points: t.earned || 0, maxPoints: t.max || 0 };
   });
-  return { format: 'prozentwert-training-result', version: 1, appTitle: 'Prozente mit Köpfchen', studentCode, completedAt: new Date().toISOString(), chapters: [...new Set(tasks.map(t => t.ch))], points: score, maxPoints: doneMax, selectedMaxPoints: maxScore, answers };
+  return { format: 'prozentwert-training-result', version: 2, appTitle: 'Prozente mit Köpfchen', studentName, completedAt: new Date().toISOString(), chapters: [...new Set(tasks.map(t => t.ch))], points: score, maxPoints: doneMax, selectedMaxPoints: maxScore, answers };
 }
 function downloadResultFile() {
   let result;
@@ -684,7 +655,8 @@ function downloadResultFile() {
   const a = document.createElement('a');
   const date = new Date(result.completedAt).toISOString().slice(0, 10);
   a.href = url;
-  a.download = 'Prozenttraining_' + result.studentCode + '_' + date + '.json';
+  const fileName = String(result.studentName || 'Ergebnis').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9_-]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40) || 'Ergebnis';
+  a.download = 'Prozenttraining_' + fileName + '_' + date + '.json';
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   $('downloadHint').textContent = 'Die Datei wurde heruntergeladen. Bitte gib sie deiner Lehrkraft ab.';
@@ -695,40 +667,7 @@ function showResult() {
   try { localStorage.setItem(RESULT_KEY, JSON.stringify(makeResultFile())); } catch (e) {}
   clearState();
   show('result');
-  const done = tasks.filter(t => t.done);
-  const doneMax = done.reduce((s, t) => s + t.max, 0);
-  const pct = doneMax ? Math.round(score / doneMax * 100) : 0;
-  const secs = Math.round((Date.now() - startTime) / 1000);
-  const stars = done.length ? starsFor(pct) : 0;
-  $('stars').textContent = starStr(stars);
-  $('stars').className = 'text-6xl tracking-widest ' + (stars ? 'text-amber-400' : 'text-slate-300');
-  $('resTitle').textContent = pct >= 90 ? 'Prozent-Profi! 🏆' : pct >= 70 ? 'Richtig gut! 👍' : pct >= 50 ? 'Solide, weiter üben! 💪' : 'Dranbleiben, das wird! 🌱';
-  $('resName').textContent = (studentCode ? 'Code ' + studentCode + ' · ' : '') + new Date().toLocaleDateString('de-DE');
-  const chs = [...new Set(tasks.map(t => t.ch))];
-  $('resScope').textContent = `Kapitel ${chs.join(', ')} · ${done.length} von ${tasks.length} Aufgaben bearbeitet` + (endedEarly ? ' · vorzeitig beendet' : '');
-  $('resPts').textContent = score;
-  $('resMax').textContent = doneMax;
-  $('resPct').textContent = pct + ' %';
-  $('resTime').textContent = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0') + ' min';
-  $('resBar').style.width = '0%';
-  setTimeout(() => $('resBar').style.width = pct + '%', 100);
-
-  $('chStats').className = `mt-8 grid grid-cols-2 sm:grid-cols-${Math.min(chs.length, 4)} gap-3 text-center`;
-  $('chStats').innerHTML = chs.map(c => {
-    const { e, m, n } = chapterSums(c, true), all = chapterSums(c, false).n;
-    return `<div class="rounded-2xl p-3 ${CH[c].cls}"><div class="text-sm font-semibold">${CH[c].name.replace(' · ', '<br>')}</div>
-      <div class="text-2xl font-black mt-1">${n ? `${e}/${m}` : '–'}</div><div class="text-xs">${n === all ? 'Punkte' : `${n} von ${all} Aufgaben`}</div></div>`;
-  }).join('');
-
-  $('resList').innerHTML = tasks.map((t, i) => !t.done ? `
-    <li class="flex gap-3 rounded-xl bg-white/60 p-3 text-slate-400"><span class="text-xl">⏸</span>
-      <div class="flex-1"><div class="text-sm">Aufgabe ${t.taskNumber || i + 1} · nicht bearbeitet</div><div>${t.p} % von ${fu(t.G, t.u)}</div></div></li>` : `
-    <li class="flex gap-3 rounded-xl bg-white p-3 ${t.earned === t.max ? '' : 'ring-1 ring-rose-200'}">
-      <span class="text-xl">${t.earned === t.max ? '✅' : t.earned > 0 ? '🟡' : '❌'}</span>
-      <div class="flex-1"><div class="text-slate-500 text-sm">Aufgabe ${t.taskNumber || i + 1} · Kapitel ${t.ch} · ${t.earned}/${t.max} Pkt.</div>
-      <div>${t.p} % von ${fu(t.G, t.u)} = <b>${fu(t.W, t.u)}</b>
-      ${t.given !== undefined && !t.ok ? `<span class="text-rose-600"> (deine Antwort: ${fu(t.given, t.u)})</span>` : ''}</div></div>
-    </li>`).join('');
+  $('resName').textContent = studentName ? `Name: ${studentName}` : '';
 }
 
 /* ================= Ziffernblock & Events ================= */
@@ -743,15 +682,15 @@ function showResult() {
 
 $('cvDemo10').innerHTML = commaViz(450, 1, 'loop', true, '€');
 $('cvDemo1').innerHTML = commaViz(450, 2, 'loop', true, '€');
-$('startBtn').addEventListener('click', () => { studentCode = $('codeInput').value.trim().toUpperCase(); $('codeHint').classList.add('hidden'); newRound(); });
-$('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('startBtn').click(); });
+$('startBtn').addEventListener('click', () => { studentName = $('studentNameInput').value.trim().replace(/\s+/g, ' '); $('nameHint').classList.add('hidden'); newRound(); });
+$('studentNameInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('startBtn').click(); });
 $('actionBtn').addEventListener('click', onAction);
 $('quitBtn').addEventListener('click', onQuit);
 $('imContinue').addEventListener('click', () => { show('quiz'); startTask(); });
 $('imStop').addEventListener('click', () => { endedEarly = tasks.some(x => !x.done); showResult(); });
 $('againBtn').addEventListener('click', () => { initStart(); show('start'); });
 $('downloadResultBtn').addEventListener('click', downloadResultFile);
-$('resumeBtn').addEventListener('click', () => { const s = loadState(); if (!s) { initStart(); return; } const code = $('codeInput').value.trim().toUpperCase(); if (!validStudentCode(code)) { $('codeHint').classList.remove('hidden'); $('codeInput').focus(); return; } s.studentCode = code; resume(s); });
+$('resumeBtn').addEventListener('click', () => { const s = loadState(); if (!s) { initStart(); return; } studentName = $('studentNameInput').value.trim().replace(/\s+/g, ' '); if (!validStudentName(studentName)) { $('nameHint').classList.remove('hidden'); $('studentNameInput').focus(); return; } s.studentName = studentName; resume(s); });
 $('discardBtn').addEventListener('click', () => { clearState(); initStart(); });
 
 function initStart() {
@@ -759,8 +698,8 @@ function initStart() {
   $('resumeBox').classList.toggle('hidden', !s);
   if (s) {
     const t = s.tasks[s.idx];
-    $('resumeInfo').textContent = (s.studentCode ? 'Code ' + s.studentCode + ' · ' : 'Bitte Schülercode eingeben · ') + 'weiter bei Aufgabe ' + (s.idx + 1) + ' von ' + s.tasks.length + ' (' + CH[t.ch].name + ') · ' + s.score + ' Punkte';
-    if (s.studentCode && validStudentCode(s.studentCode)) $('codeInput').value = s.studentCode;
+    $('resumeInfo').textContent = 'Du kannst bei Aufgabe ' + (s.idx + 1) + ' von ' + s.tasks.length + ' (' + CH[t.ch].name + ') weitermachen.';
+    if (s.studentName) $('studentNameInput').value = s.studentName;
   }
   renderPick();
 }
